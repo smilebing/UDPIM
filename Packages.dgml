@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
-  <Nodes />
-  <Links />
+  <Nodes>
+    <Node Id="UDPIMClient" Label="UDPIMClient" Category="项目" />
+    <Node Id="Newtonsoft.Json 10.0.1" Label="Newtonsoft.Json 10.0.1" Category="包" />
+    <Node Id="UDPIM" Label="UDPIM" Category="项目" />
+    <Node Id="Newtonsoft.Json 10.0.1" Label="Newtonsoft.Json 10.0.1" Category="包" />
+  </Nodes>
+  <Links>
+    <Link Source="UDPIMClient" Target="Newtonsoft.Json 10.0.1" Category="安装的程序包" />
+    <Link Source="UDPIM" Target="Newtonsoft.Json 10.0.1" Category="安装的程序包" />
+  </Links>
   <Categories>
     <Category Id="项目" />
     <Category Id="包" />
