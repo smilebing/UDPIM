@@ -30,9 +30,10 @@ namespace UDPIMClient
             if(string.IsNullOrEmpty(username)||string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("请输入完整信息");
+                return;
             }
 
-
+            //构造登录信息
             LoginModel loginModel=new LoginModel();
             loginModel.username=username;
             loginModel.password=password;
@@ -44,14 +45,19 @@ namespace UDPIMClient
             loginMsg.type = "login";
             loginMsg.loginModel = loginModel;
 
-            server.start();
-            server.sendMsg(loginMsg,ser)
+            server.sendMsg(loginMsg, ServerIP.getServerIPEndPoint());
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             RegisterForm registerForm = new RegisterForm();
             registerForm.Show();
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+            //加载窗体时启动服务
+            server.start();
         }
     }
 }

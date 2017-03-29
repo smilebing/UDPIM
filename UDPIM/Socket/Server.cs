@@ -118,12 +118,19 @@ namespace UDPIM.Socket
                     msgObject.type = "heartFeedBack";
                     msgObject.content = "";
                     msgObject.users = onlineUsers.users;
-                    sendMsg(JsonConvert.SerializeObject(msgObject), remoteIPEndPoint);
+                    sendMsg(msgObject, remoteIPEndPoint);
                     Console.WriteLine("server send:" + JsonConvert.SerializeObject(msgObject));
 
                     break;
                 case "login":
-                    
+                    //测试阶段 登录不验证账号密码
+                    MyMessage feedBackMsg = new MyMessage();
+                    feedBackMsg.from = "server";
+                    feedBackMsg.to = receiveMsg.from;
+                    feedBackMsg.type = "login";
+                    feedBackMsg.content = "true";
+
+                    sendMsg(feedBackMsg, remoteIPEndPoint);
                     break;
                 case "register":
                     break;
@@ -132,10 +139,13 @@ namespace UDPIM.Socket
 
         }
 
-        public void sendMsg(String msgStr, IPEndPoint remoteIPEndPoint)
+
+        //发送信息给指定ip
+        public void sendMsg(MyMessage msg, IPEndPoint remoteIPEndPoint)
         {
-            byte[] msg = Encoding.ASCII.GetBytes(msgStr);
-            udpClient.SendAsync(msg, msg.Length, remoteIPEndPoint);
+            string msgStr = JsonConvert.SerializeObject(msg);
+            byte[] sendBytes = Encoding.ASCII.GetBytes(msgStr);
+            udpClient.SendAsync(sendBytes, sendBytes.Length, remoteIPEndPoint);
         }
     }
 }
