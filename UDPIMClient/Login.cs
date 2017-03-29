@@ -14,10 +14,25 @@ namespace UDPIMClient
 {
     public partial class Login : Form
     {
+
+        static Login instance = null;
         Server server = Server.getInstance();
-        public Login()
+        private  Login()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// 登录窗口单例
+        /// </summary>
+        /// <returns></returns>
+        public static Login getInstance()
+        {
+            if(instance==null)
+            {
+                instance = new Login();
+            }
+            return instance;
         }
 
 
@@ -58,6 +73,11 @@ namespace UDPIMClient
         {
             //加载窗体时启动服务
             server.start();
+        }
+
+        public void hide()
+        {
+            this.Close();
         }
     }
 }

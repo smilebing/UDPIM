@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using Model;
+using System.Windows.Forms;
 
 
 namespace UDPIMClient.Socket
@@ -18,6 +19,8 @@ namespace UDPIMClient.Socket
     
     class Server
     {
+        public delegate void myDelegate( Login loginForm );
+
         //设置服务器的地址和端口
         static string SERVER_IP = "127.0.0.1";
         static int SERVER_PORT = 8800;
@@ -98,9 +101,22 @@ namespace UDPIMClient.Socket
                         currentUsername = receiveMsg.to;
                         startHeartBeatThread();
 
+                        myDelegate myDelegate = new myDelegate(delegate(Login loginForm)
+                        {
+                            UserList uForm = UserList.getInstance();
+                            uForm.Show();
+                            loginForm.Hide();
+                        });
+
+                        Login lForm = Login.getInstance();
+
+                        lForm.Invoke(myDelegate,lForm);
                         //登录成功
-                        UserList userListForm = new UserList();
-                        userListForm.Show();
+
+                  
+
+                      
+                        
                     }
                     else
                     {
@@ -180,6 +196,7 @@ namespace UDPIMClient.Socket
             string msgStr = JsonConvert.SerializeObject(msg);
 
             byte[] sendBytes = Encoding.ASCII.GetBytes(msgStr);
+            Console.WriteLine("server 发送" + sendBytes.Length + "byte");
             udpClient.SendAsync(sendBytes, sendBytes.Length, remoteIPEndPoint);
         }
 
@@ -203,6 +220,18 @@ namespace UDPIMClient.Socket
                 sendMsg(heartBeatMsg, serverIPEndPoint);
                 Thread.Sleep(HEART_BEAT_SLEEP_TIME);
             }
+        }
+
+        public void showUserListForm()
+        {
+            UserList userListForm = UserList.getInstance();
+            userListForm.Show();
+
+        }
+
+        public void show()
+        {
+         
         }
 
         
