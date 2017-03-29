@@ -11,18 +11,16 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using Model;
-using System.Windows.Forms;
-
 
 namespace UDPIMClient.Socket
 {
-    
+
     class Server
     {
-        public delegate void myDelegate( Login loginForm );
-
+        public delegate void myDelegate(Login loginForm);
+        public delegate void showChatFormDelegate(string username, IPEndPoint remoteIPEndPoint);
         //设置服务器的地址和端口
- 
+
         static int HEART_BEAT_SLEEP_TIME = 1000 * 5;
 
         //当前登录的用户名
@@ -32,8 +30,8 @@ namespace UDPIMClient.Socket
             set;
         }
 
-        static Server instance=null;
-        UdpClient udpClient =null;
+        static Server instance = null;
+        UdpClient udpClient = null;
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 6600);
 
 
@@ -50,7 +48,7 @@ namespace UDPIMClient.Socket
         /// <returns></returns>
         public static Server getInstance()
         {
-            if(instance==null)
+            if (instance == null)
             {
                 instance = new Server();
             }
@@ -59,10 +57,10 @@ namespace UDPIMClient.Socket
 
         public void start()
         {
-            
+
         }
 
-        public void  stop()
+        public void stop()
         {
             udpClient.Close();
         }
@@ -72,7 +70,7 @@ namespace UDPIMClient.Socket
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="remoteIPEndPoint"></param>
-        private void handleMsg(string msg,IPEndPoint remoteIPEndPoint)
+        private void handleMsg(string msg, IPEndPoint remoteIPEndPoint)
         {
             //{
             //    "from":"username",
@@ -80,13 +78,13 @@ namespace UDPIMClient.Socket
             //    "type":"text/img/file",
             //    "content":"......"
             //}
-            
-            //获取消息类
-            MyMessage receiveMsg = JsonConvert.DeserializeObject < MyMessage >( msg);
 
-            switch(receiveMsg.type)
+            //获取消息类
+            MyMessage receiveMsg = JsonConvert.DeserializeObject<MyMessage>(msg);
+
+            switch (receiveMsg.type)
             {
-                case"heartFeedBack":
+                case "heartFeedBack":
                     Console.WriteLine("client receive heartFeedBack");
                     Console.WriteLine(msg);
                     //发送心跳包给服务器后服务器的反馈
@@ -95,7 +93,7 @@ namespace UDPIMClient.Socket
 
                 case "login":
                     //登录类型的信息
-                    if(receiveMsg.content=="true")
+                    if (receiveMsg.content == "true")
                     {
                         currentUsername = receiveMsg.to;
                         startHeartBeatThread();
@@ -109,13 +107,13 @@ namespace UDPIMClient.Socket
 
                         Login lForm = Login.getInstance();
 
-                        lForm.Invoke(myDelegate,lForm);
+                        lForm.Invoke(myDelegate, lForm);
                         //登录成功
 
-                  
 
-                      
-                        
+
+
+
                     }
                     else
                     {
@@ -128,6 +126,7 @@ namespace UDPIMClient.Socket
                     break;
 
                 case "chat":
+                    Console.WriteLine("client 收到" + receiveMsg.content);
                     //普通的聊天信息
                     //获取所有的打开窗体
                     FormCollection collections = Application.OpenForms;
@@ -142,27 +141,35 @@ namespace UDPIMClient.Socket
                             if (receiveMsg.from == chatForm.username)
                             {
                                 chatForm.addTips(receiveMsg.content);
+                                break;
                             }
-                            else
-                            {
-                                //对话窗没有打开
-                                ChatForm newChatForm = new ChatForm();
-                                //设置窗体内的具体信息
-                                newChatForm.username = receiveMsg.from;
-                                newChatForm.remoteIPEndPoint = remoteIPEndPoint;
 
-                                newChatForm.Show();
-                                newChatForm.addTips(receiveMsg.content);
-                            }
                         }
                     }
+
+
+                    UserList userListForm = UserList.getInstance();
+                    showChatFormDelegate showDelegate = new showChatFormDelegate(delegate(string username, IPEndPoint remoteIP)
+                    {
+                        //对话窗没有打开
+                        ChatForm newChatForm = new ChatForm();
+                        //设置窗体内的具体信息
+                        newChatForm.username = username;
+                        newChatForm.remoteIPEndPoint = remoteIP;
+                        newChatForm.Show();
+                        newChatForm.addTips(receiveMsg.content);
+                    });
+
+                    userListForm.Invoke(showDelegate, receiveMsg.from, remoteIPEndPoint);
+
+
                     break;
             }
 
-           
-            
+
+
         }
-        private  void EndReceive(IAsyncResult ar)
+        private void EndReceive(IAsyncResult ar)
         {
             try
             {
@@ -185,7 +192,7 @@ namespace UDPIMClient.Socket
             catch (Exception ex)
             {
                 //处理异常
-                Console.WriteLine("client error"+ex.Message);
+                Console.WriteLine("client error" + ex.Message);
             }
         }
 
@@ -213,7 +220,7 @@ namespace UDPIMClient.Socket
             heartBeatMsg.type = "heart";
             heartBeatMsg.content = "heart";
 
-            while(true)
+            while (true)
             {
                 sendMsg(heartBeatMsg, ServerIP.getServerIPEndPoint());
                 Thread.Sleep(HEART_BEAT_SLEEP_TIME);
@@ -229,9 +236,9 @@ namespace UDPIMClient.Socket
 
         public void show()
         {
-         
+
         }
 
-        
+
     }
 }
