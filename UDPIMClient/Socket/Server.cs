@@ -22,8 +22,7 @@ namespace UDPIMClient.Socket
         public delegate void myDelegate( Login loginForm );
 
         //设置服务器的地址和端口
-        static string SERVER_IP = "127.0.0.1";
-        static int SERVER_PORT = 8800;
+ 
         static int HEART_BEAT_SLEEP_TIME = 1000 * 5;
 
         //当前登录的用户名
@@ -208,7 +207,6 @@ namespace UDPIMClient.Socket
 
         public void sendHeartBeatMsg()
         {
-            IPEndPoint serverIPEndPoint = new IPEndPoint(IPAddress.Parse(SERVER_IP), SERVER_PORT);
             MyMessage heartBeatMsg = new MyMessage();
             heartBeatMsg.from = currentUsername;
             heartBeatMsg.to = "server";
@@ -217,7 +215,7 @@ namespace UDPIMClient.Socket
 
             while(true)
             {
-                sendMsg(heartBeatMsg, serverIPEndPoint);
+                sendMsg(heartBeatMsg, ServerIP.getServerIPEndPoint());
                 Thread.Sleep(HEART_BEAT_SLEEP_TIME);
             }
         }
