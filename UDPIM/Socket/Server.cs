@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Model;
 using System.Data.OleDb;
+using System.Windows.Forms;
 namespace UDPIM.Socket
 {
     class Server
@@ -19,12 +20,14 @@ namespace UDPIM.Socket
 
         Access access;
         OleDbConnection conn;
-        static string exePath = @"C:\Users\zhuda\Documents\Visual Studio 2013\Projects\UDPIM";//本程序所在路径
+        string path =Application.StartupPath;
 
+        
         private Server()
         {
+            Console.WriteLine(path);
             //创建连接对象
-            conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + exePath + @"\IMDB.mdb");
+            conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + path + @"\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
            

@@ -14,10 +14,24 @@ namespace UDPIMClient
 {
     public partial class UserList : Form
     {
-        public UserList()
+        static UserList instance = null;
+        private UserList()
         {
             InitializeComponent();
             timer1.Start();
+        }
+
+        /// <summary>
+        ///单例
+        /// </summary>
+        /// <returns></returns>
+        public static UserList getInstance()
+        {
+            if(instance==null)
+            {
+                instance = new UserList();
+            }
+            return instance;
         }
 
 
@@ -38,6 +52,10 @@ namespace UDPIMClient
             Console.WriteLine("选中用户：" + e.Node.Text);
             //显示聊天界面
 
+            if(e.Node.Text=="在线用户")
+            {
+                return;
+            }
 
             MyIPEndPoint ip;
             if (OnlineUsers.getInstance().users.TryGetValue(e.Node.Text, out ip))
@@ -64,7 +82,8 @@ namespace UDPIMClient
         {
             root.Nodes.Clear();
             //填充在线用户信息
-            
+
+            Console.WriteLine("用户列表刷新");
             foreach (KeyValuePair<string, MyIPEndPoint> keyValuePair in OnlineUsers.getInstance().users)
             {
                 TreeNode node = new TreeNode();
