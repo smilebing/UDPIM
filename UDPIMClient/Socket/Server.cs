@@ -19,6 +19,7 @@ namespace UDPIMClient.Socket
     {
         public delegate void myDelegate(Login loginForm);
         public delegate void showChatFormDelegate(string username, IPEndPoint remoteIPEndPoint);
+        public delegate void AddTipsDelegate(ChatForm chatForm,string msg);
         //设置服务器的地址和端口
 
         static int HEART_BEAT_SLEEP_TIME = 1000 * 5;
@@ -136,12 +137,17 @@ namespace UDPIMClient.Socket
                         if (eachForm.GetType().Equals(typeof(ChatForm)))
                         {
                             ChatForm chatForm = (ChatForm)eachForm;
-                            Console.WriteLine("找到聊天窗口");
                             //如果对话框已经打开
                             if (receiveMsg.from == chatForm.username)
                             {
-                                chatForm.addTips(receiveMsg.content);
-                                break;
+                                AddTipsDelegate addTipsDelegate = new AddTipsDelegate(delegate( ChatForm form,string s)
+                                {
+                                    form.addTips(s);
+                                });
+                                Console.WriteLine("找到聊天窗口");
+
+                                chatForm.Invoke(addTipsDelegate,chatForm,receiveMsg.content);
+                                return;
                             }
 
                         }
