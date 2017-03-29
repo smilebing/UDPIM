@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPIMClient", "UDPIMClient\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{FE17CA39-13A7-4862-8FF9-B913725A52AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UdpSendFile", "..\..\..\..\..\..\迅雷下载\UDP文件传输\UdpSendFileDemo - 6\UdpSendFile\UdpSendFile.csproj", "{DF0DB212-1AC3-4C6C-BC72-8A62166E4969}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UdpSendFile", "UdpSendFile\UdpSendFile.csproj", "{DF0DB212-1AC3-4C6C-BC72-8A62166E4969}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
