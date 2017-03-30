@@ -7,16 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.OleDb;
 using KeyboardIdentify;
+using Model;
 
 namespace UDPIMRegister
 {
     public partial class RegisterForm : Form
     {
+        Access access;
+        OleDbConnection conn;
+
         public RegisterForm()
         {
+            conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + Application.StartupPath + @"\IMDB.mdb");
+            access = new Access(conn);
+
             InitializeComponent();
         }
+
+        private void RegisterForm_Load(object sender, EventArgs e) { }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -83,7 +93,11 @@ namespace UDPIMRegister
                     //已经记录完毕
                     if(recordCounter > MAX_RECORD_REQUIRED)
                     {
-                        //TODO 将结果上传至服务器
+                        //TODO 完成注册功能
+                        foreach(var record in recordList)
+                        {
+                            access.InsertKeyboardData(textBox1.Text, record);
+                        }
                     }
                 }
             }
@@ -112,9 +126,5 @@ namespace UDPIMRegister
             Console.WriteLine("key press");
         }
 
-        private void RegisterForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

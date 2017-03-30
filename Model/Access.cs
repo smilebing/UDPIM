@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
 using System.Data.SqlClient;
+using KeyboardIdentify;
 
 namespace Model
 {
@@ -134,14 +135,14 @@ namespace Model
         /// <param name="name"></param>
         /// <param name="pwd"></param>
         /// <returns>更新是否成功</returns>
-        public bool update(string name,string pwd)
+        public bool update(string name, string pwd)
         {
-          if(  search(name)==false)
-          {
-              return false;
-          }
+            if (search(name) == false)
+            {
+                return false;
+            }
 
-          OleDbCommand update_cmd = conn.CreateCommand();
+            OleDbCommand update_cmd = conn.CreateCommand();
 
 
             string sqlString = "update [user] set password=@pwd where username=@name";
@@ -149,15 +150,52 @@ namespace Model
             update_cmd.CommandText = sqlString;
             update_cmd.Parameters.Add(new OleDbParameter("pwd", pwd));
             update_cmd.Parameters.Add(new OleDbParameter("name", name));
-           
+
 
             int i = update_cmd.ExecuteNonQuery();
-            if(i>0)
+            if (i > 0)
             {
                 return true;
             }
 
             return false;
+        }
+
+        public int SearchUserID(string username)
+        {
+            string searchUserIDString = "select ID from [user] where [username]=@username";
+            int userID = -1;
+
+            OleDbCommand searchUserIDCmd = conn.CreateCommand();
+            searchUserIDCmd.CommandText = searchUserIDString;
+            searchUserIDCmd.Parameters.Add(new OleDbParameter("username", username));
+            var reader = searchUserIDCmd.ExecuteReader();
+
+            while(reader.NextResult())
+            {
+                userID = (int)reader["ID"];
+            }
+
+            return userID;
+        }
+
+        public bool InsertKeyboardData(string username, Vector v)
+        {
+            string insertKeyboardDataString = "insert into [keyboard] (data, userID) values (@data, @userID)";
+            int userID = SearchUserID(username);
+
+            //如果找不到该用户
+            if(userID == -1)
+            {
+                return false;
+            }
+
+            var insertDataCmd = conn.CreateCommand();
+            insertDataCmd.CommandText = insertKeyboardDataString;
+            insertDataCmd.Parameters.AddWithValue("data", v.ToJson());
+            insertDataCmd.Parameters.AddWithValue("userID", userID);
+
+            return insertDataCmd.ExecuteNonQuery() > 0;
         }
 
     }
