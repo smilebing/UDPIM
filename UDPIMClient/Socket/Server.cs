@@ -19,6 +19,7 @@ namespace UDPIMClient.Socket
     {
         public delegate void myDelegate(Login loginForm);
         public delegate void showChatFormDelegate(string username, IPEndPoint remoteIPEndPoint);
+        public delegate void AddTipsDelegate(ChatForm chatForm,string msg);
         //设置服务器的地址和端口
 
         static int HEART_BEAT_SLEEP_TIME = 1000 * 5;
@@ -84,13 +85,50 @@ namespace UDPIMClient.Socket
 
             switch (receiveMsg.type)
             {
+                #region heartFeedBack 服务器反馈心跳信息
                 case "heartFeedBack":
                     Console.WriteLine("client receive heartFeedBack");
                     Console.WriteLine(msg);
                     //发送心跳包给服务器后服务器的反馈
                     OnlineUsers.getInstance().users = receiveMsg.users;
                     break;
+                #endregion
 
+                #region chat 聊天信息
+                case "chat":
+                    Console.WriteLine("client 收到" + receiveMsg.content);
+                    //普通的聊天信息
+                    //显示聊天窗口或者在已经打开的窗口中添加信息
+                    showChatForm(receiveMsg.from,receiveMsg.content, remoteIPEndPoint); 
+                    break;
+                #endregion
+
+                #region file 文件发送信息
+                case "file":
+                    if (receiveMsg.content == "prepared")
+                    {
+                        //请求发送文件后收到的反馈
+                        //显示发送文件的窗口
+                    }
+                    else if (receiveMsg.content == "send")
+                    {
+                        //对反请求发送文件
+                        //查看发送者信息，显示接收文件的窗口
+                        showChatForm(receiveMsg.from, "向您发送文件", remoteIPEndPoint, true);
+                        //发送接收文件准备完毕的信息
+                        MyMessage fileReadyMsg = new MyMessage();
+                        fileReadyMsg.from = currentUsername;
+                        fileReadyMsg.to = receiveMsg.from;
+                        fileReadyMsg.type = "file";
+                        fileReadyMsg.content = "prepared";
+
+                        sendMsg(fileReadyMsg, remoteIPEndPoint);
+                    }
+                   
+                    break;
+                #endregion
+
+                #region login 登录信息
                 case "login":
                     //登录类型的信息
                     if (receiveMsg.content == "true")
@@ -121,49 +159,15 @@ namespace UDPIMClient.Socket
                         MessageBox.Show("登录失败");
                     }
                     break;
+                #endregion
+
+                #region register 注册信息
                 case "register":
                     //注册类型的信息
                     break;
+                #endregion
 
-                case "chat":
-                    Console.WriteLine("client 收到" + receiveMsg.content);
-                    //普通的聊天信息
-                    //获取所有的打开窗体
-                    FormCollection collections = Application.OpenForms;
-                    foreach (Form eachForm in collections)
-                    {
-                        //找出聊天窗口
-                        if (eachForm.GetType().Equals(typeof(ChatForm)))
-                        {
-                            ChatForm chatForm = (ChatForm)eachForm;
-                            Console.WriteLine("找到聊天窗口");
-                            //如果对话框已经打开
-                            if (receiveMsg.from == chatForm.username)
-                            {
-                                chatForm.addTips(receiveMsg.content);
-                                break;
-                            }
-
-                        }
-                    }
-
-
-                    UserList userListForm = UserList.getInstance();
-                    showChatFormDelegate showDelegate = new showChatFormDelegate(delegate(string username, IPEndPoint remoteIP)
-                    {
-                        //对话窗没有打开
-                        ChatForm newChatForm = new ChatForm();
-                        //设置窗体内的具体信息
-                        newChatForm.username = username;
-                        newChatForm.remoteIPEndPoint = remoteIP;
-                        newChatForm.Show();
-                        newChatForm.addTips(receiveMsg.content);
-                    });
-
-                    userListForm.Invoke(showDelegate, receiveMsg.from, remoteIPEndPoint);
-
-
-                    break;
+          
             }
 
 
@@ -201,7 +205,7 @@ namespace UDPIMClient.Socket
         {
             string msgStr = JsonConvert.SerializeObject(msg);
 
-            byte[] sendBytes = Encoding.ASCII.GetBytes(msgStr);
+            byte[] sendBytes = Encoding.UTF8.GetBytes(msgStr);
             Console.WriteLine("server 发送" + sendBytes.Length + "byte");
             udpClient.SendAsync(sendBytes, sendBytes.Length, remoteIPEndPoint);
         }
@@ -231,14 +235,125 @@ namespace UDPIMClient.Socket
         {
             UserList userListForm = UserList.getInstance();
             userListForm.Show();
-
         }
 
-        public void show()
+        /// <summary>
+        /// 将信息在聊天窗口显示
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="msg"></param>
+        /// <param name="remoteIPEndPoint"></param>
+        public void showChatForm(string msgFrom,string msg,IPEndPoint remoteIPEndPoint,bool showReceiveFileForm=false)
         {
+            //获取所有的打开窗体
+            FormCollection collections = Application.OpenForms;
+            foreach (Form eachForm in collections)
+            {
+                //找出聊天窗口
+                if (eachForm.GetType().Equals(typeof(ChatForm)))
+                {
+                    ChatForm chatForm = (ChatForm)eachForm;
+                    //如果对话框已经打开
+                    if (msgFrom == chatForm.username)
+                    {
+                        AddTipsDelegate addTipsDelegate = new AddTipsDelegate(delegate(ChatForm form, string s)
+                        {
+                            form.addTips(s);
 
+                            //判断是否要打开传输文件界面
+                            if(showReceiveFileForm)
+                            {
+                                ReceiveFileForm receiveFileForm = new ReceiveFileForm();
+                                receiveFileForm.Show();
+                            }
+                        });
+                        Console.WriteLine("找到聊天窗口");
+
+                        chatForm.Invoke(addTipsDelegate, chatForm, msg);
+                        return;
+                    }
+
+                }
+            }
+
+
+            UserList userListForm = UserList.getInstance();
+            showChatFormDelegate showDelegate = new showChatFormDelegate(delegate(string username, IPEndPoint remoteIP)
+            {
+                //对话窗没有打开
+                ChatForm newChatForm = new ChatForm();
+                //设置窗体内的具体信息
+                newChatForm.username = username;
+                newChatForm.remoteIPEndPoint = remoteIP;
+                newChatForm.Show();
+                newChatForm.addTips(msg);
+
+                //判断是否要打开传输文件界面
+                if(showReceiveFileForm)
+                {
+                    ReceiveFileForm receiveFileForm = new ReceiveFileForm();
+                    receiveFileForm.Show();
+                }
+            });
+
+            userListForm.Invoke(showDelegate, msgFrom, remoteIPEndPoint);
         }
 
+        /// <summary>
+        /// 显示发送文件的窗口
+        /// </summary>
+        /// <param name="msgFrom"></param>
+        /// <param name="remoteIPEndPoint"></param>
+        public void showSendFileForm(string msgFrom,IPEndPoint remoteIPEndPoint)
+        {
+            //获取所有的打开窗体
+            FormCollection collections = Application.OpenForms;
+            foreach (Form eachForm in collections)
+            {
+                //找出聊天窗口
+                if (eachForm.GetType().Equals(typeof(ChatForm)))
+                {
+                    ChatForm chatForm = (ChatForm)eachForm;
+                    //如果对话框已经打开
+                    if (msgFrom == chatForm.username)
+                    {
+                        AddTipsDelegate addTipsDelegate = new AddTipsDelegate(delegate(ChatForm form, string s)
+                        {
+                            form.addTips(s);
+                            //显示发送文件的窗口
+                            SendFileForm sendFileForm = new SendFileForm();
+                            sendFileForm.Show();
+                           
+                        });
+
+                        chatForm.Invoke(addTipsDelegate, chatForm, "你请求发送文件\n");
+                        return;
+                    }
+
+                }
+            }
+
+
+            UserList userListForm = UserList.getInstance();
+            showChatFormDelegate showDelegate = new showChatFormDelegate(delegate(string username, IPEndPoint remoteIP)
+            {
+                //对话窗没有打开
+                ChatForm newChatForm = new ChatForm();
+                //设置窗体内的具体信息
+                newChatForm.username = username;
+                newChatForm.remoteIPEndPoint = remoteIP;
+                newChatForm.Show();
+                newChatForm.addTips("你请求发送文件");
+
+                //打开文件传输form
+                //显示发送文件的窗口
+                SendFileForm sendFileForm = new SendFileForm();
+                sendFileForm.Show();
+                
+            });
+
+            userListForm.Invoke(showDelegate, msgFrom, remoteIPEndPoint);
+        }
 
     }
 }

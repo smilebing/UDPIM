@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Access.cs" />
     <Compile Include="AESHelper.cs" />
+    <Compile Include="ControlTag.cs" />
     <Compile Include="LoginModel.cs" />
     <Compile Include="MyIPEndPoint.cs" />
     <Compile Include="MyMessage.cs" />

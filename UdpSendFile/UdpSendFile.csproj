@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DF0DB212-1AC3-4C6C-BC72-8A62166E4969}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpWin</RootNamespace>
+    <AssemblyName>UdpSendFile</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BufferHelper.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="FileReceiveBufferEvent.cs" />
+    <Compile Include="FileReceiveEvent.cs" />
+    <Compile Include="FileSendBufferEvent.cs" />
+    <Compile Include="FileSendEvent.cs" />
+    <Compile Include="IDataCell.cs" />
+    <Compile Include="LabelClickEvent.cs" />
+    <Compile Include="MD5Helper.cs" />
+    <Compile Include="ReceiveDataEvent.cs" />
+    <Compile Include="FileReceiveCompleteEvent.cs" />
+    <Compile Include="RequestSendFileEvent.cs" />
+    <Compile Include="ResponeTraFransfersFile.cs" />
+    <Compile Include="SendCell.cs" />
+    <Compile Include="SendFileManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TraFransfersFileControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TraFransfersFileControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ReadFileBufferEvent.cs" />
+    <Compile Include="ReadFileObject.cs" />
+    <Compile Include="ReceiveFileManager.cs" />
+    <Compile Include="TraFransfersFile.cs" />
+    <Compile Include="TraFransfersFileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TraFransfersFileControl.Designer.cs">
+      <DependentUpon>TraFransfersFileControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TraFransfersFileLogEvent.cs" />
+    <Compile Include="TraFransfersFileStart.cs" />
+    <Compile Include="UdpPeer.cs" />
+    <Compile Include="UdpReceiveFile.cs" />
+    <Compile Include="UdpSendFile.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
