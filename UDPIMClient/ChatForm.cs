@@ -56,5 +56,19 @@ namespace UDPIMClient
         {
             richTextBox1.AppendText(username+"说："+msg+"\n");
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Server server = Server.getInstance();
+
+            //发送发送文件的通知
+            MyMessage msg = new MyMessage();
+            msg.from = server.currentUsername;
+            msg.to = username;
+            msg.type = "file";
+            msg.content = "send";
+
+            server.sendMsg(msg,remoteIPEndPoint);
+        }
     }
 }

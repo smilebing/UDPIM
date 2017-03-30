@@ -109,6 +109,7 @@ namespace UDPIMClient.Socket
                     {
                         //请求发送文件后收到的反馈
                         //显示发送文件的窗口
+                        showSendFileForm(receiveMsg.from, remoteIPEndPoint);
                     }
                     else if (receiveMsg.content == "send")
                     {
@@ -321,8 +322,10 @@ namespace UDPIMClient.Socket
                         {
                             form.addTips(s);
                             //显示发送文件的窗口
-                            SendFileForm sendFileForm = new SendFileForm();
-                            sendFileForm.Show();
+                            SendFileForm sendFileForm = SendFileForm.getInstance();
+                            sendFileForm.remoteIPEndPoint = remoteIPEndPoint;
+                            sendFileForm.remoteUsername = msgFrom;
+                            sendFileForm.Show(); ;
                            
                         });
 
@@ -347,13 +350,16 @@ namespace UDPIMClient.Socket
 
                 //打开文件传输form
                 //显示发送文件的窗口
-                SendFileForm sendFileForm = new SendFileForm();
+                SendFileForm sendFileForm = SendFileForm.getInstance();
+                sendFileForm.remoteIPEndPoint = remoteIPEndPoint;
+                sendFileForm.remoteUsername = msgFrom;
                 sendFileForm.Show();
                 
             });
 
             userListForm.Invoke(showDelegate, msgFrom, remoteIPEndPoint);
         }
+
 
     }
 }

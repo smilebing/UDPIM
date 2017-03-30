@@ -5,27 +5,54 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace UDPIMClient
 {
-    public partial class SendFileForm : Form
+    public partial class SendFileForm : Form,IDisposable
     {
         #region Fields
 
         private UdpSendFile udpSendFile;
 
+        private static SendFileForm instance;
+
+        public string remoteUsername
+        {
+            get;
+            set;
+        }
+
+        public IPEndPoint remoteIPEndPoint
+        {
+            get;
+            set;
+        }
         #endregion
 
         #region Constructor
 
-        public SendFileForm()
+        /// <summary>
+        /// 私有化构造函数，实现单例
+        /// </summary>
+        private SendFileForm()
         {
             InitializeComponent();
 
         }
+
+        public static SendFileForm getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new SendFileForm();
+            }
+            return instance;
+        }
+
 
         #endregion
 
@@ -230,37 +257,41 @@ namespace UDPIMClient
 
         private void SendFileForm_Load(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() == DialogResult.OK)
+            if (string.IsNullOrEmpty(remoteUsername))
             {
-                try
-                {
-                    SendFileManager sendFileManager = new SendFileManager(
-                        ofd.FileName);
-                    if (udpSendFile.CanSend(sendFileManager))
-                    {
-                        FileTransfersItem item = fileTansfersContainer.AddItem(
-                            sendFileManager.MD5,
-                            "发送文件",
-                            sendFileManager.Name,
-                            Icon.ExtractAssociatedIcon(ofd.FileName).ToBitmap(),
-                            sendFileManager.Length,
-                            FileTransfersItemStyle.Send);
-                        item.CancelButtonClick += new EventHandler(ItemCancelButtonClick);
-                        item.Tag = sendFileManager;
-                        sendFileManager.Tag = item;
-                        udpSendFile.SendFile(sendFileManager, item.Image);
-                    }
-                    else
-                    {
-                        MessageBox.Show("文件正在发送，不能发送重复的文件。");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                return;
             }
+
+            if (remoteIPEndPoint == null)
+            {
+                return;
+            }
+
+            udpSendFile = new UdpSendFile(
+                remoteIPEndPoint.Address.ToString(),
+                10002,
+                10002);
+            //sendFile.Log += new TraFransfersFileLogEventHandler(SendFileLog);
+            udpSendFile.FileSendBuffer +=
+                new FileSendBufferEventHandler(FileSendBuffer);
+            udpSendFile.FileSendAccept +=
+                new FileSendEventHandler(FileSendAccept);
+            udpSendFile.FileSendRefuse +=
+                new FileSendEventHandler(FileSendRefuse);
+            udpSendFile.FileSendCancel += new FileSendEventHandler(FileSendCancel);
+            udpSendFile.FileSendComplete +=
+                new FileSendEventHandler(FileSendComplete);
+            udpSendFile.Start();
+            AppendLog(string.Format(
+                "开始侦听，端口：{0}", udpSendFile.Port), false);
+
+
+        }
+
+        private void SendFileForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Dispose();
         }
     }
+
 }

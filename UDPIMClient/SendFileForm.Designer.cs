@@ -172,6 +172,7 @@
             this.MaximizeBox = false;
             this.Name = "SendFileForm";
             this.Text = "发送文件";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SendFileForm_FormClosing);
             this.Load += new System.EventHandler(this.SendFileForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

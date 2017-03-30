@@ -29,7 +29,7 @@ namespace UDPIM.Socket
             //创建连接对象
             conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + path + @"\IMDB.mdb");
             access = new Access(conn);
-            access.openConn();
+            //access.openConn();
            
             udpClient = new UdpClient(RemoteIpEndPoint);
             UdpState s = new UdpState(udpClient, RemoteIpEndPoint);
