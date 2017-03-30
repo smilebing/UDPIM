@@ -1,4 +1,4 @@
-﻿namespace UDPIMClient
+﻿namespace UDPIMRegister
 {
     partial class RegisterForm
     {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KeyboardIdentify;
 
-namespace UDPIMClient
+namespace UDPIMRegister
 {
     public partial class RegisterForm : Form
     {
@@ -84,8 +84,6 @@ namespace UDPIMClient
                     if(recordCounter > MAX_RECORD_REQUIRED)
                     {
                         //TODO 将结果上传至服务器
-
-                        return;
                     }
                 }
             }

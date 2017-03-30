@@ -8,9 +8,9 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace UDPIMClient
+namespace KeyboardIdentify
 {
-    class Vector
+    public class Vector
     {
         public List<double> vector;
 
@@ -86,7 +86,7 @@ namespace UDPIMClient
             return Math.Sqrt(distance);
         }
 
-        public string GetJson()
+        public string ToJson()
         {
             string ret = JsonConvert.SerializeObject(this);
             return ret;
