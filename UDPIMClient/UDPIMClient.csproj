@@ -106,7 +106,6 @@
     <Compile Include="UserList.Designer.cs">
       <DependentUpon>UserList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Vector.cs" />
     <EmbeddedResource Include="ChatForm.resx">
       <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -152,6 +151,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KeyboardIdentify\KeyboardIdentify.csproj">
+      <Project>{008e23c0-0f8f-4945-9493-2bdf1f167060}</Project>
+      <Name>KeyboardIdentify</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{fe17ca39-13a7-4862-8ff9-b913725a52ad}</Project>
       <Name>Model</Name>
