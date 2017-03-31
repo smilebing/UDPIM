@@ -161,6 +161,11 @@ namespace Model
             return false;
         }
 
+        /// <summary>
+        /// 根据用户名查询用户的数字ID（主键）
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <returns>用户的ID，如果返回-1，则用户不存在或者查询有错误</returns>
         public int SearchUserID(string username)
         {
             string searchUserIDString = "select ID from [user] where [username]=@username";
@@ -179,6 +184,12 @@ namespace Model
             return userID;
         }
 
+        /// <summary>
+        /// 插入键盘特征描述向量
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="v">击键特征描述向量</param>
+        /// <returns>是否插入成功</returns>
         public bool InsertKeyboardData(string username, Vector v)
         {
             string insertKeyboardDataString = "insert into [keyboard] (data, userID) values (@data, @userID)";

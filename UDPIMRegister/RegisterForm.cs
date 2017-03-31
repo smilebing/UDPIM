@@ -17,11 +17,13 @@ namespace UDPIMRegister
     {
         Access access;
         OleDbConnection conn;
+        bool recordStarted = false;
 
         public RegisterForm()
         {
             conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + Application.StartupPath + @"\IMDB.mdb");
             access = new Access(conn);
+            access.openConn();
 
             InitializeComponent();
         }
@@ -55,22 +57,30 @@ namespace UDPIMRegister
             textBox1.Enabled = false;
             textBox2.Enabled = false;
             textBox3.Enabled = true;
+            recordStarted = true;
+            InitializeKeyboardVariables();
         }
 
         // 键盘特征记录
         private KeyboardTimeline timeline = new KeyboardTimeline();
         private int recordCounter = 0; //输入次数计数器
-        private List<Vector> recordList; //在内存中储存输入的特征向量
+        private List<Vector> recordList = null; //在内存中储存输入的特征向量
         private const int MAX_RECORD_REQUIRED = 15;
 
         private void InitializeKeyboardVariables()
         {
-
+            recordList = new List<Vector>();
+            recordCounter = 0;
+            timeline = new KeyboardTimeline();
         }
 
         private void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
             //Console.WriteLine("key down");
+
+            //若还未开始记录，则返回
+            if (!recordStarted)
+                return;
 
             //过滤除了字母以及数字的按键
             if (!((e.KeyValue > (int)Keys.A && e.KeyValue < (int)Keys.Z) ||
@@ -83,7 +93,13 @@ namespace UDPIMRegister
             //如果按下的是回车，代表输入已经完成
             if((Keys)e.KeyValue == Keys.Enter)
             {
-                //recordList.Add(timeline.ToVector());
+                //密码输入错误
+                if (!textBox2.Text.Equals(textBox3.Text))
+                {
+                    MessageBox.Show("密码输入错误！", "错误");
+                    return;
+                }
+
                 if(MessageBox.Show("是否保存？", "保存", MessageBoxButtons.YesNo)
                     == DialogResult.Yes)
                 {
@@ -93,7 +109,9 @@ namespace UDPIMRegister
                     //已经记录完毕
                     if(recordCounter > MAX_RECORD_REQUIRED)
                     {
-                        //TODO 完成注册功能
+                        //新增用户
+                        access.insert(textBox1.Text, textBox2.Text);
+
                         foreach(var record in recordList)
                         {
                             access.InsertKeyboardData(textBox1.Text, record);
