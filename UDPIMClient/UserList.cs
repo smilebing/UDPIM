@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UDPIMClient.Socket;
 
 namespace UDPIMClient
 {
@@ -54,6 +55,12 @@ namespace UDPIMClient
 
             if(e.Node.Text=="在线用户")
             {
+                return;
+            }
+
+            if(e.Node.Text==Server.getInstance().currentUsername)
+            {
+                MessageBox.Show("不能和自己聊天");
                 return;
             }
 

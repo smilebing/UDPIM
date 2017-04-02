@@ -284,6 +284,7 @@ namespace UDPIMClient.Socket
                 //对话窗没有打开
                 ChatForm newChatForm = new ChatForm();
                 //设置窗体内的具体信息
+                newChatForm.Text = username;
                 newChatForm.username = username;
                 newChatForm.remoteIPEndPoint = remoteIP;
                 newChatForm.Show();
@@ -343,6 +344,7 @@ namespace UDPIMClient.Socket
                 //对话窗没有打开
                 ChatForm newChatForm = new ChatForm();
                 //设置窗体内的具体信息
+                newChatForm.Text = username;
                 newChatForm.username = username;
                 newChatForm.remoteIPEndPoint = remoteIP;
                 newChatForm.Show();

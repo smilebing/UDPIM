@@ -14,6 +14,8 @@ namespace UDPIMClient
 {
     public partial class ReceiveFileForm : Form
     {
+        public static string localPort = "10002";
+
         #region Fields
 
         private UdpReceiveFile udpReceiveFile;
@@ -125,22 +127,7 @@ namespace UDPIMClient
 
         #region Control Events
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            udpReceiveFile = new UdpReceiveFile(
-                int.Parse(tbLocalPort.Text));
-            udpReceiveFile.RequestSendFile +=
-                new RequestSendFileEventHandler(RequestSendFile);
-            udpReceiveFile.FileReceiveBuffer +=
-                new FileReceiveBufferEventHandler(FileReceiveBuffer);
-            udpReceiveFile.FileReceiveComplete +=
-                new FileReceiveEventHandler(FileReceiveComplete);
-            udpReceiveFile.FileReceiveCancel +=
-                new FileReceiveEventHandler(FileReceiveCancel);
-            udpReceiveFile.Start();
-            AppendLog(string.Format(
-                "开始侦听，端口：{0}", udpReceiveFile.Port), false);
-        }
+ 
 
         private void ItemRefuseButtonClick(object sender, EventArgs e)
         {
@@ -256,7 +243,7 @@ namespace UDPIMClient
         private void ReceiveFileForm_Load(object sender, EventArgs e)
         {
             udpReceiveFile = new UdpReceiveFile(
-              int.Parse(tbLocalPort.Text));
+              int.Parse(localPort));
             udpReceiveFile.RequestSendFile +=
                 new RequestSendFileEventHandler(RequestSendFile);
             udpReceiveFile.FileReceiveBuffer +=
