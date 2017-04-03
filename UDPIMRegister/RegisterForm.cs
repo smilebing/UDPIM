@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Data.OleDb;
+using System.Windows.Forms;
 using KeyboardIdentify;
 using Model;
 
@@ -15,20 +9,30 @@ namespace UDPIMRegister
 {
     public partial class RegisterForm : Form
     {
-        Access access;
-        OleDbConnection conn;
-        bool recordStarted = false;
+        private const int MAX_RECORD_REQUIRED = 3;
+        private readonly Access access;
+        private readonly OleDbConnection conn;
+        private int recordCounter; //输入次数计数器
+        private List<Vector> recordList; //在内存中储存输入的特征向量
+        private bool recordStarted;
+
+        // 键盘特征记录
+        private KeyboardTimeline timeline = new KeyboardTimeline();
 
         public RegisterForm()
         {
-            conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + Application.StartupPath + @"\IMDB.mdb");
+            conn =
+                new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + Application.StartupPath +
+                                    @"\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
 
             InitializeComponent();
         }
 
-        private void RegisterForm_Load(object sender, EventArgs e) { }
+        private void RegisterForm_Load(object sender, EventArgs e)
+        {
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -37,7 +41,7 @@ namespace UDPIMRegister
                 MessageBox.Show("请输入用户名");
                 return;
             }
-            int pwdLength = 0;
+            var pwdLength = 0;
             try
             {
                 pwdLength = Convert.ToInt32(textBox2.Text.Trim().Length);
@@ -59,13 +63,9 @@ namespace UDPIMRegister
             textBox3.Enabled = true;
             recordStarted = true;
             InitializeKeyboardVariables();
+            button2.Enabled = true;
+            textBox3.Focus();
         }
-
-        // 键盘特征记录
-        private KeyboardTimeline timeline = new KeyboardTimeline();
-        private int recordCounter = 0; //输入次数计数器
-        private List<Vector> recordList = null; //在内存中储存输入的特征向量
-        private const int MAX_RECORD_REQUIRED = 3;
 
         private void InitializeKeyboardVariables()
         {
@@ -76,18 +76,13 @@ namespace UDPIMRegister
 
         private void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
-            //Console.WriteLine("key down");
+            Console.WriteLine("key down");
 
             //若还未开始记录，则返回
             if (!recordStarted)
                 return;
 
-            //过滤除了字母以及数字的按键
-            if (!((e.KeyValue > (int)Keys.A && e.KeyValue < (int)Keys.Z) ||
-                (e.KeyValue > (int)Keys.D0 && e.KeyValue < (int)Keys.D9)))
-                return;
-
-            if(e.KeyValue == (int)Keys.Back)
+            if (e.KeyValue == (int) Keys.Back)
             {
                 MessageBox.Show("不允许退格，该次输入无效！", "错误");
                 textBox3.Clear();
@@ -96,9 +91,13 @@ namespace UDPIMRegister
                 return;
             }
 
-            if ((Keys)e.KeyValue != Keys.Enter)
-                timeline.MarkDown(e.KeyValue);
+            //过滤除了字母以及数字的按键
+            if (!(e.KeyValue >= (int) Keys.A && e.KeyValue <= (int) Keys.Z ||
+                  e.KeyValue >= (int) Keys.D0 && e.KeyValue <= (int) Keys.D9))
+                return;
 
+            if ((Keys) e.KeyValue != Keys.Enter)
+                timeline.MarkDown(e.KeyValue);
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -111,8 +110,8 @@ namespace UDPIMRegister
             //Console.WriteLine("key up");
 
             //过滤除了字母以及数字的按键
-            if (!((e.KeyValue > (int)Keys.A && e.KeyValue < (int)Keys.Z) ||
-                (e.KeyValue > (int)Keys.D0 && e.KeyValue < (int)Keys.D9)))
+            if (!(e.KeyValue > (int) Keys.A && e.KeyValue < (int) Keys.Z ||
+                  e.KeyValue > (int) Keys.D0 && e.KeyValue < (int) Keys.D9))
                 return;
 
             timeline.MarkUp(e.KeyValue);
@@ -150,9 +149,16 @@ namespace UDPIMRegister
                     access.insert(textBox1.Text, textBox2.Text);
 
                     foreach (var record in recordList)
-                    {
                         access.InsertKeyboardData(textBox1.Text, record);
-                    }
+
+                    //输入完成后，关闭完成按钮，关闭输入文本框，打开用户名和密码输入框
+                    textBox1.Enabled = true;
+                    textBox1.Clear();
+                    textBox1.Focus();
+                    textBox2.Enabled = true;
+                    textBox2.Clear();
+                    textBox3.Enabled = false;
+                    button2.Enabled = false;
                 }
             }
         }
