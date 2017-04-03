@@ -46,7 +46,8 @@ namespace UDPIMClient
             server.sendMsg(msgObject, remoteIPEndPoint);
 
             //添加消息记录
-            richTextBox1.AppendText("我说：" + msg + "\n");
+            richTextBox1.AppendText(Server.getInstance().currentUsername + " " + DateTime.Now.ToLongTimeString().ToString() + "\n");
+            richTextBox1.AppendText("    "+msg + "\n");
             richTextBox2.Text = "";
             
         }
@@ -54,7 +55,8 @@ namespace UDPIMClient
 
         public void addTips(String msg)
         {
-            richTextBox1.AppendText(username+"说："+msg+"\n");
+            richTextBox1.AppendText(username+ " "+DateTime.Now.ToLongTimeString().ToString()+"\n");
+            richTextBox1.AppendText("    "+msg+"\n");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -69,6 +71,11 @@ namespace UDPIMClient
             msg.content = "send";
 
             server.sendMsg(msg,remoteIPEndPoint);
+        }
+
+        private void ChatForm_Load(object sender, EventArgs e)
+        {
+            this.Text = username;
         }
     }
 }

@@ -14,6 +14,9 @@ namespace UDPIMClient
 {
     public partial class SendFileForm : Form,IDisposable
     {
+        public static int localPort = 10002;
+        public static int remotePort = 10003;
+        public static string remoteIp = "127.0.0.1";
         #region Fields
 
         private UdpSendFile udpSendFile;
@@ -108,26 +111,26 @@ namespace UDPIMClient
                 sendFileManager.Name), true);
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            udpSendFile = new UdpSendFile(
-                tbRemoteIP.Text,
-                int.Parse(tbRemotePort.Text),
-                int.Parse(tbLocalPort.Text));
-            //sendFile.Log += new TraFransfersFileLogEventHandler(SendFileLog);
-            udpSendFile.FileSendBuffer +=
-                new FileSendBufferEventHandler(FileSendBuffer);
-            udpSendFile.FileSendAccept +=
-                new FileSendEventHandler(FileSendAccept);
-            udpSendFile.FileSendRefuse +=
-                new FileSendEventHandler(FileSendRefuse);
-            udpSendFile.FileSendCancel += new FileSendEventHandler(FileSendCancel);
-            udpSendFile.FileSendComplete +=
-                new FileSendEventHandler(FileSendComplete);
-            udpSendFile.Start();
-            AppendLog(string.Format(
-                "开始侦听，端口：{0}", udpSendFile.Port), false);
-        }
+        //private void button2_Click(object sender, EventArgs e)
+        //{
+        //    udpSendFile = new UdpSendFile(
+        //        tbRemoteIP.Text,
+        //        int.Parse(tbRemotePort.Text),
+        //        int.Parse(tbLocalPort.Text));
+        //    sendFile.Log += new TraFransfersFileLogEventHandler(SendFileLog);
+        //    udpSendFile.FileSendBuffer +=
+        //        new FileSendBufferEventHandler(FileSendBuffer);
+        //    udpSendFile.FileSendAccept +=
+        //        new FileSendEventHandler(FileSendAccept);
+        //    udpSendFile.FileSendRefuse +=
+        //        new FileSendEventHandler(FileSendRefuse);
+        //    udpSendFile.FileSendCancel += new FileSendEventHandler(FileSendCancel);
+        //    udpSendFile.FileSendComplete +=
+        //        new FileSendEventHandler(FileSendComplete);
+        //    udpSendFile.Start();
+        //    AppendLog(string.Format(
+        //        "开始侦听，端口：{0}", udpSendFile.Port), false);
+        //}
 
         #endregion
 
