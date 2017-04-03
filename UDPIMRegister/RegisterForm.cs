@@ -32,6 +32,7 @@ namespace UDPIMRegister
 
         private void RegisterForm_Load(object sender, EventArgs e)
         {
+            label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -65,6 +66,8 @@ namespace UDPIMRegister
             InitializeKeyboardVariables();
             button2.Enabled = true;
             textBox3.Focus();
+
+            label3.Text = "还需要输入" + (MAX_RECORD_REQUIRED - recordCounter).ToString() + "次";
         }
 
         private void InitializeKeyboardVariables()
@@ -142,6 +145,8 @@ namespace UDPIMRegister
                 textBox3.Clear();
                 textBox3.Focus();
 
+                label3.Text = "还需要输入" + (MAX_RECORD_REQUIRED - recordCounter) + "次";
+
                 //已经记录完毕
                 if (recordCounter >= MAX_RECORD_REQUIRED)
                 {
@@ -159,6 +164,7 @@ namespace UDPIMRegister
                     textBox2.Clear();
                     textBox3.Enabled = false;
                     button2.Enabled = false;
+                    label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
                 }
             }
         }
