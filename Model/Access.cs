@@ -212,5 +212,21 @@ namespace Model
             return insertDataCmd.ExecuteNonQuery() > 0;
         }
 
+        public List<Vector> FetchKeyboardVectors(string username)
+        {
+            List<Vector> keyboardVectors = new List<Vector>();
+
+            var fetchCmd = conn.CreateCommand();
+            fetchCmd.CommandText = "SELECT * FROM [keyboard] WHERE [username]=@username";
+            fetchCmd.Parameters.AddWithValue("@username", username);
+            var reader = fetchCmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                keyboardVectors.Add(Vector.GetVector((string)reader["data"]));
+            }
+
+            return keyboardVectors;
+        }
     }
 }
