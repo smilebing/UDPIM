@@ -32,23 +32,23 @@ namespace UDPIMRegister
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(textBox1.Text.Trim()))
+            if (string.IsNullOrEmpty(textBox1.Text.Trim()))
             {
                 MessageBox.Show("请输入用户名");
                 return;
             }
-            int  pwdLength=0;
+            int pwdLength = 0;
             try
             {
-                pwdLength= Convert.ToInt32( textBox2.Text.Trim().Length);
+                pwdLength = Convert.ToInt32(textBox2.Text.Trim().Length);
 
-                if(pwdLength<=10||pwdLength>=26)
+                if (pwdLength <= 10 || pwdLength >= 26)
                 {
                     MessageBox.Show("请输入正确的密码长度");
                     return;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("请输入正确的密码长度");
                 return;
@@ -65,7 +65,7 @@ namespace UDPIMRegister
         private KeyboardTimeline timeline = new KeyboardTimeline();
         private int recordCounter = 0; //输入次数计数器
         private List<Vector> recordList = null; //在内存中储存输入的特征向量
-        private const int MAX_RECORD_REQUIRED = 15;
+        private const int MAX_RECORD_REQUIRED = 3;
 
         private void InitializeKeyboardVariables()
         {
@@ -87,39 +87,18 @@ namespace UDPIMRegister
                 (e.KeyValue > (int)Keys.D0 && e.KeyValue < (int)Keys.D9)))
                 return;
 
-            if((Keys)e.KeyValue != Keys.Enter)
+            if(e.KeyValue == (int)Keys.Back)
+            {
+                MessageBox.Show("不允许退格，该次输入无效！", "错误");
+                textBox3.Clear();
+                timeline = new KeyboardTimeline();
+                textBox3.Focus();
+                return;
+            }
+
+            if ((Keys)e.KeyValue != Keys.Enter)
                 timeline.MarkDown(e.KeyValue);
 
-            //如果按下的是回车，代表输入已经完成
-            if((Keys)e.KeyValue == Keys.Enter)
-            {
-                //密码输入错误
-                if (!textBox2.Text.Equals(textBox3.Text))
-                {
-                    MessageBox.Show("密码输入错误！", "错误");
-                    return;
-                }
-
-                if(MessageBox.Show("是否保存？", "保存", MessageBoxButtons.YesNo)
-                    == DialogResult.Yes)
-                {
-                    recordList.Add(timeline.ToVector());
-                    recordCounter++;
-
-                    //已经记录完毕
-                    if(recordCounter > MAX_RECORD_REQUIRED)
-                    {
-                        //新增用户
-                        access.insert(textBox1.Text, textBox2.Text);
-
-                        foreach(var record in recordList)
-                        {
-                            access.InsertKeyboardData(textBox1.Text, record);
-                        }
-                    }
-                }
-            }
-            
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -144,5 +123,38 @@ namespace UDPIMRegister
             Console.WriteLine("key press");
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //密码输入错误
+            if (!textBox2.Text.Equals(textBox3.Text))
+            {
+                MessageBox.Show("密码输入错误！", "错误");
+                textBox3.Clear();
+                timeline = new KeyboardTimeline();
+                textBox3.Focus();
+                return;
+            }
+
+            if (MessageBox.Show("是否保存？", "保存", MessageBoxButtons.YesNo)
+                == DialogResult.Yes)
+            {
+                recordList.Add(timeline.ToVector());
+                recordCounter++;
+                textBox3.Clear();
+                textBox3.Focus();
+
+                //已经记录完毕
+                if (recordCounter >= MAX_RECORD_REQUIRED)
+                {
+                    //新增用户
+                    access.insert(textBox1.Text, textBox2.Text);
+
+                    foreach (var record in recordList)
+                    {
+                        access.InsertKeyboardData(textBox1.Text, record);
+                    }
+                }
+            }
+        }
     }
 }

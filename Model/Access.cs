@@ -112,11 +112,14 @@ namespace Model
             OleDbCommand insert_cmd = conn.CreateCommand();
 
 
-            string sqlString = "insert into [user] (username,password) values(@name,@pwd)";
-            insert_cmd.CommandText = sqlString;
+            //string sqlString = "INSERT INTO [user] (username,password) VALUES (@username,@password)";
+            
+            insert_cmd.CommandText = "INSERT INTO [user] ([username],[password]) VALUES(@username, @password)";
 
-            insert_cmd.Parameters.Add(new OleDbParameter("name", name));
-            insert_cmd.Parameters.Add(new OleDbParameter("pwd", pwd));
+            //insert_cmd.Parameters.Add(new OleDbParameter("name", name));
+            //insert_cmd.Parameters.Add(new OleDbParameter("pwd", pwd));
+            insert_cmd.Parameters.AddWithValue("@username", name);
+            insert_cmd.Parameters.AddWithValue("@password", pwd);
 
             int i = insert_cmd.ExecuteNonQuery();
             if(i>0)
@@ -176,7 +179,7 @@ namespace Model
             searchUserIDCmd.Parameters.Add(new OleDbParameter("username", username));
             var reader = searchUserIDCmd.ExecuteReader();
 
-            while(reader.NextResult())
+            while(reader.Read())
             {
                 userID = (int)reader["ID"];
             }
