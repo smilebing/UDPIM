@@ -220,10 +220,11 @@ namespace Model
         public List<Vector> FetchKeyboardVectors(string username)
         {
             List<Vector> keyboardVectors = new List<Vector>();
+            var userID = SearchUserID(username);
 
             var fetchCmd = conn.CreateCommand();
-            fetchCmd.CommandText = "SELECT * FROM [keyboard] WHERE [username]=@username";
-            fetchCmd.Parameters.AddWithValue("@username", username);
+            fetchCmd.CommandText = "SELECT * FROM [keyboard] WHERE [userID]=@userID";
+            fetchCmd.Parameters.AddWithValue("@userID", userID);
             var reader = fetchCmd.ExecuteReader();
 
             while (reader.Read())
