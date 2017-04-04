@@ -12,7 +12,6 @@ using UDPIMClient.Socket;
 using System.Net;
 using KeyboardIdentify;
 using Model;
-using UDPIMClient.Verify;
 
 namespace UDPIMClient
 {
@@ -68,6 +67,11 @@ namespace UDPIMClient
                 textBox2.Focus();
                 return;
             }
+
+#if KEYBOARD_DEBUG
+            MessageBox.Show("OK!");
+            return;
+#endif
 
             //构造登录信息
             LoginModel loginModel=new LoginModel();

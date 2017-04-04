@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KeyboardIdentify;
 
-namespace UDPIMClient.Verify
+namespace KeyboardIdentify
 {
     public class Verifier
     {
@@ -31,11 +31,11 @@ namespace UDPIMClient.Verify
 
             foreach (double d in distance)
             {
-                if (Math.Abs(d / threshold - 1) < 0.1)
+                if (Math.Abs(d / threshold - 1) < 0.15)
                     count++;
             }
 
-            return count/distance.Count > 0.8;
+            return (double)count/(double)distance.Count > 0.8;
         }
 
         public static double CaculateThresholdDistance(ICollection<Vector> vectors)

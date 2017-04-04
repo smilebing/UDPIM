@@ -138,8 +138,6 @@ namespace UDPIMRegister
             {
                 recordList.Add(timeline.ToVector());
                 recordCounter++;
-                textBox3.Clear();
-                textBox3.Focus();
 
                 label3.Text = "还需要输入" + (MAX_RECORD_REQUIRED - recordCounter) + "次";
 
@@ -166,6 +164,8 @@ namespace UDPIMRegister
                     label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
                 }
             }
+            textBox3.Clear();
+            textBox3.Focus();
             timeline = new KeyboardTimeline();
         }
 
