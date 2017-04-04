@@ -12,7 +12,6 @@ using UDPIMClient.Socket;
 using System.Net;
 using KeyboardIdentify;
 using Model;
-
 namespace UDPIMClient
 {
     public partial class Login : Form
@@ -57,10 +56,6 @@ namespace UDPIMClient
             }
 
 
-#if KEYBOARD_DEBUG
-            MessageBox.Show("OK!");
-            return;
-#endif
 
             //构造登录信息
             LoginModel loginModel=new LoginModel();
