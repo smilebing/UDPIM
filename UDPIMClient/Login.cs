@@ -27,6 +27,7 @@ namespace UDPIMClient
             var conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + @"..\..\..\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
+            InitializeKeyboardVariable();
         }
 
         /// <summary>
@@ -56,6 +57,16 @@ namespace UDPIMClient
                 return;
             }
 
+            var userVector = timeline.ToVector();
+            var storedVectors = access.FetchKeyboardVectors(username);
+            if (!Verifier.Verify(userVector, storedVectors))
+            {
+                MessageBox.Show("键盘特征非用户本人！", "错误");
+                InitializeKeyboardVariable();
+                textBox2.Clear();
+                textBox2.Focus();
+                return;
+            }
 
 #if KEYBOARD_DEBUG
             MessageBox.Show("OK!");
@@ -97,7 +108,7 @@ namespace UDPIMClient
         //键盘特征记录
         private KeyboardTimeline timeline;
 
-        private void initializeKeyboardVariable()
+        private void InitializeKeyboardVariable()
         {
             timeline = new KeyboardTimeline();
         }
@@ -132,7 +143,8 @@ namespace UDPIMClient
         private void resetButton_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
-            initializeKeyboardVariable();
+            textBox2.Focus();
+            InitializeKeyboardVariable();
         }
     }
 }

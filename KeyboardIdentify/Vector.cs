@@ -92,9 +92,9 @@ namespace KeyboardIdentify
             return ret;
         }
 
-        public static Vector GetVector(string VectorJson)
+        public static Vector GetVector(string vectorJson)
         {
-            Vector ret = JsonConvert.DeserializeObject<Vector>(VectorJson);
+            Vector ret = JsonConvert.DeserializeObject<Vector>(vectorJson);
             return ret;
         }
 

@@ -138,16 +138,17 @@ namespace UDPIMRegister
             {
                 recordList.Add(timeline.ToVector());
                 recordCounter++;
-                textBox3.Clear();
-                textBox3.Focus();
 
                 label3.Text = "还需要输入" + (MAX_RECORD_REQUIRED - recordCounter) + "次";
 
                 //已经记录完毕
                 if (recordCounter >= MAX_RECORD_REQUIRED)
                 {
-                    //新增用户
-                    access.insert(textBox1.Text, textBox2.Text);
+                    //如果用户不存在，就新增用户
+                    if (access.SearchUserID(textBox1.Text) >= 0)
+                    {
+                        access.insert(textBox1.Text, textBox2.Text);
+                    }
 
                     foreach (var record in recordList)
                         access.InsertKeyboardData(textBox1.Text, record);
@@ -163,6 +164,8 @@ namespace UDPIMRegister
                     label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
                 }
             }
+            textBox3.Clear();
+            textBox3.Focus();
             timeline = new KeyboardTimeline();
         }
 
