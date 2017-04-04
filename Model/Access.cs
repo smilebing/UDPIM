@@ -228,5 +228,20 @@ namespace Model
 
             return keyboardVectors;
         }
+
+        public void DeleteUser(string username)
+        {
+            var deleteDataCmd = conn.CreateCommand();
+            var deleteUserCmd = conn.CreateCommand();
+            int userID = SearchUserID(username);
+
+            deleteDataCmd.CommandText = "DELETE FROM [keyboard] WHERE [userID]=@userID";
+            deleteDataCmd.Parameters.AddWithValue("@userID", userID);
+            deleteDataCmd.ExecuteNonQuery();
+
+            deleteUserCmd.CommandText = "DELETE FROM [user] WHERE [ID]=@userID";
+            deleteUserCmd.Parameters.AddWithValue("@userID", userID);
+            deleteUserCmd.ExecuteNonQuery();
+        }
     }
 }

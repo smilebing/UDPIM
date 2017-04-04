@@ -21,9 +21,7 @@ namespace UDPIMRegister
 
         public RegisterForm()
         {
-            conn =
-                new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + Application.StartupPath +
-                                    @"\IMDB.mdb");
+            conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + @"..\..\..\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
 
@@ -105,7 +103,6 @@ namespace UDPIMRegister
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("text changed to " + textBox3.Text);
         }
 
         private void textBox3_KeyUp(object sender, KeyEventArgs e)
@@ -113,8 +110,8 @@ namespace UDPIMRegister
             //Console.WriteLine("key up");
 
             //过滤除了字母以及数字的按键
-            if (!(e.KeyValue > (int) Keys.A && e.KeyValue < (int) Keys.Z ||
-                  e.KeyValue > (int) Keys.D0 && e.KeyValue < (int) Keys.D9))
+            if (!(e.KeyValue >= (int) Keys.A && e.KeyValue <= (int) Keys.Z ||
+                  e.KeyValue >= (int) Keys.D0 && e.KeyValue <= (int) Keys.D9))
                 return;
 
             timeline.MarkUp(e.KeyValue);
@@ -122,7 +119,6 @@ namespace UDPIMRegister
 
         private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Console.WriteLine("key press");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -167,6 +163,13 @@ namespace UDPIMRegister
                     label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
                 }
             }
+            timeline = new KeyboardTimeline();
+        }
+
+        private void deleteUserButton_Click(object sender, EventArgs e)
+        {
+            var deleteUserForm = new DeleteUserForm(this.access);
+            deleteUserForm.ShowDialog();
         }
     }
 }

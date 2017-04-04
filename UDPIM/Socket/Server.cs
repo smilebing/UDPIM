@@ -27,6 +27,7 @@ namespace UDPIM.Socket
         {
             Console.WriteLine(path);
             //创建连接对象
+            //TODO 更改相对路径
             conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + path + @"\IMDB.mdb");
             access = new Access(conn);
             //access.openConn();
