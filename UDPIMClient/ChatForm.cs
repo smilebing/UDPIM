@@ -36,6 +36,14 @@ namespace UDPIMClient
         private void button1_Click(object sender, EventArgs e)
         {
             string msg = richTextBox2.Text.Trim();
+            //判断消息长度
+            if(msg.Length>150)
+            {
+                MessageBox.Show("发送信息最大长度为150");
+                return;
+            }
+
+            //构造发送信息
             MyMessage msgObject = new MyMessage();
             msgObject.from = Server.getInstance().currentUsername;
             msgObject.to = username;
