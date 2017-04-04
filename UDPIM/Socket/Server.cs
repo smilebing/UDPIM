@@ -112,6 +112,7 @@ namespace UDPIM.Socket
                     MyIPEndPoint myIPEndPoint = new MyIPEndPoint();
                     myIPEndPoint.ip = remoteIPEndPoint.Address.ToString();
                     myIPEndPoint.port = remoteIPEndPoint.Port;
+                    myIPEndPoint.createTime = System.DateTime.Now;
 
                     OnlineUsers onlineUsers = OnlineUsers.getInstance();
                     onlineUsers.users.AddOrUpdate(receiveMsg.from,myIPEndPoint,(k,v)=>v);

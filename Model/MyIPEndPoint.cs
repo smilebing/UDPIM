@@ -19,5 +19,11 @@ namespace Model
             get; 
             set; 
         }
+
+        public DateTime createTime
+        {
+            get;
+            set;
+        }
     }
 }
