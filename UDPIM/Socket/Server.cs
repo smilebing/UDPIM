@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Model;
 using System.Data.OleDb;
 using System.Windows.Forms;
+
 namespace UDPIM.Socket
 {
     class Server
@@ -71,10 +72,11 @@ namespace UDPIM.Socket
                     IPEndPoint ip = s.ip;
                     Byte[] receiveBytes = udpClient.EndReceive(ar, ref ip);
                     string msg = Encoding.UTF8.GetString(receiveBytes);
-                    Console.WriteLine(msg);
+                    string decryptMsg = AESHelper.Decrypt(msg);
+                    Console.WriteLine(decryptMsg);
 
                     //处理接收过来的数据
-                    handleMsg(msg, ip);
+                    handleMsg(decryptMsg, ip);
                     udpClient.BeginReceive(EndReceive, s);//在这里重新开始一个异步接收，用于处理下一个网络请求
                 }
             }
@@ -148,8 +150,10 @@ namespace UDPIM.Socket
         public void sendMsg(MyMessage msg, IPEndPoint remoteIPEndPoint)
         {
             string msgStr = JsonConvert.SerializeObject(msg);
-            byte[] sendBytes = Encoding.ASCII.GetBytes(msgStr);
+            string encryptStr = AESHelper.Encrypt(msgStr);
+            byte[] sendBytes = Encoding.ASCII.GetBytes(encryptStr);
             udpClient.SendAsync(sendBytes, sendBytes.Length, remoteIPEndPoint);
         }
+
     }
 }

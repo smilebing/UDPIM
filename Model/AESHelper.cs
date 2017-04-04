@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    class AESHelper
+    public class AESHelper
     {
         public static string Encrypt(string toEncrypt)
         {

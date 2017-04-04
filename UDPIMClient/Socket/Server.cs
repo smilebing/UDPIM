@@ -187,10 +187,11 @@ namespace UDPIMClient.Socket
                     Byte[] receiveBytes = udpClient.EndReceive(ar, ref ip);
 
                     string msg = Encoding.UTF8.GetString(receiveBytes);
+                    string decryptStr = AESHelper.Decrypt(msg);
                     Console.WriteLine("client 收到信息");
 
                     //处理接收过来的数据
-                    handleMsg(msg, ip);
+                    handleMsg(decryptStr, ip);
                     udpClient.BeginReceive(EndReceive, s);//在这里重新开始一个异步接收，用于处理下一个网络请求
                 }
             }
@@ -205,8 +206,8 @@ namespace UDPIMClient.Socket
         public void sendMsg(MyMessage msg, IPEndPoint remoteIPEndPoint)
         {
             string msgStr = JsonConvert.SerializeObject(msg);
-
-            byte[] sendBytes = Encoding.UTF8.GetBytes(msgStr);
+            string encryptStr = AESHelper.Encrypt(msgStr);
+            byte[] sendBytes = Encoding.ASCII.GetBytes(encryptStr);
             Console.WriteLine("server 发送" + sendBytes.Length + "byte");
             udpClient.SendAsync(sendBytes, sendBytes.Length, remoteIPEndPoint);
         }
