@@ -9,7 +9,7 @@ namespace UDPIMRegister
 {
     public partial class RegisterForm : Form
     {
-        private const int MAX_RECORD_REQUIRED = 3;
+        private const int MAX_RECORD_REQUIRED = 15;
         private readonly Access access;
         private readonly OleDbConnection conn;
         private int recordCounter; //输入次数计数器

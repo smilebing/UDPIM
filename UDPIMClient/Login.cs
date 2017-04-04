@@ -23,7 +23,7 @@ namespace UDPIMClient
         {
             InitializeComponent();
 
-            var conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + @"..\..\IMDB.mdb");
+            var conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + @"..\..\..\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
         }
@@ -54,6 +54,8 @@ namespace UDPIMClient
                 MessageBox.Show("请输入完整信息");
                 return;
             }
+
+
 
             //构造登录信息
             LoginModel loginModel=new LoginModel();
