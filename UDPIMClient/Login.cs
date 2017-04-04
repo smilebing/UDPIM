@@ -70,6 +70,7 @@ namespace UDPIMClient
 
 #if KEYBOARD_DEBUG
             MessageBox.Show("OK!");
+            InitializeKeyboardVariable();
             return;
 #endif
 
