@@ -12,6 +12,8 @@ using UDPIMClient.Socket;
 using System.Net;
 using KeyboardIdentify;
 using Model;
+using UDPIMClient.Verify;
+
 namespace UDPIMClient
 {
     public partial class Login : Form
@@ -26,6 +28,7 @@ namespace UDPIMClient
             var conn = new OleDbConnection("provider=Microsoft.Jet.OLEDB.4.0;data source=" + @"..\..\..\IMDB.mdb");
             access = new Access(conn);
             access.openConn();
+            InitializeKeyboardVariable();
         }
 
         /// <summary>
@@ -55,7 +58,16 @@ namespace UDPIMClient
                 return;
             }
 
-
+            var userVector = timeline.ToVector();
+            var storedVectors = access.FetchKeyboardVectors(username);
+            if (!Verifier.Verify(userVector, storedVectors))
+            {
+                MessageBox.Show("键盘特征非用户本人！", "错误");
+                InitializeKeyboardVariable();
+                textBox2.Clear();
+                textBox2.Focus();
+                return;
+            }
 
             //构造登录信息
             LoginModel loginModel=new LoginModel();
@@ -92,7 +104,7 @@ namespace UDPIMClient
         //键盘特征记录
         private KeyboardTimeline timeline;
 
-        private void initializeKeyboardVariable()
+        private void InitializeKeyboardVariable()
         {
             timeline = new KeyboardTimeline();
         }
@@ -127,7 +139,8 @@ namespace UDPIMClient
         private void resetButton_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
-            initializeKeyboardVariable();
+            textBox2.Focus();
+            InitializeKeyboardVariable();
         }
     }
 }

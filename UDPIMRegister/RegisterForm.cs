@@ -146,8 +146,11 @@ namespace UDPIMRegister
                 //已经记录完毕
                 if (recordCounter >= MAX_RECORD_REQUIRED)
                 {
-                    //新增用户
-                    access.insert(textBox1.Text, textBox2.Text);
+                    //如果用户不存在，就新增用户
+                    if (access.SearchUserID(textBox1.Text) >= 0)
+                    {
+                        access.insert(textBox1.Text, textBox2.Text);
+                    }
 
                     foreach (var record in recordList)
                         access.InsertKeyboardData(textBox1.Text, record);
