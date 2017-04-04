@@ -6,7 +6,7 @@
 *.user
 *.sln.docstates
 ModelTests/
-IMDB.ldb
+*.ldb
 
 # Build results
 [Dd]ebug/

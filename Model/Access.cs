@@ -212,6 +212,11 @@ namespace Model
             return insertDataCmd.ExecuteNonQuery() > 0;
         }
 
+        /// <summary>
+        /// 获取所有保存的键盘特征向量
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public List<Vector> FetchKeyboardVectors(string username)
         {
             List<Vector> keyboardVectors = new List<Vector>();
@@ -229,6 +234,10 @@ namespace Model
             return keyboardVectors;
         }
 
+        /// <summary>
+        /// 删除一个用户
+        /// </summary>
+        /// <param name="username"></param>
         public void DeleteUser(string username)
         {
             var deleteDataCmd = conn.CreateCommand();
@@ -242,6 +251,17 @@ namespace Model
             deleteUserCmd.CommandText = "DELETE FROM [user] WHERE [ID]=@userID";
             deleteUserCmd.Parameters.AddWithValue("@userID", userID);
             deleteUserCmd.ExecuteNonQuery();
+        }
+
+        public string GetUserPassword(string username)
+        {
+            var searchCmd = conn.CreateCommand();
+            searchCmd.CommandText = "SELECT [password] FROM [user] WHERE [username]=@username";
+            searchCmd.Parameters.AddWithValue("@username", username);
+            var reader = searchCmd.ExecuteReader();
+
+            reader.Read();
+            return (string) reader["password"];
         }
     }
 }

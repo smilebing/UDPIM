@@ -57,11 +57,23 @@ namespace UDPIMRegister
                 return;
             }
 
+            if (access.SearchUserID(textBox1.Text) >= 0)
+            {
+
+                var correctPassword = access.GetUserPassword(textBox1.Text);
+                if (correctPassword != textBox2.Text)
+                {
+                    MessageBox.Show("密码错误！", "错误");
+                    return;
+                }
+
+            }
             textBox1.Enabled = false;
             textBox2.Enabled = false;
             textBox3.Enabled = true;
             recordStarted = true;
             InitializeKeyboardVariables();
+            button1.Enabled = false;
             button2.Enabled = true;
             textBox3.Focus();
 
@@ -145,7 +157,7 @@ namespace UDPIMRegister
                 if (recordCounter >= MAX_RECORD_REQUIRED)
                 {
                     //如果用户不存在，就新增用户
-                    if (access.SearchUserID(textBox1.Text) >= 0)
+                    if (access.SearchUserID(textBox1.Text) <= 0)
                     {
                         access.insert(textBox1.Text, textBox2.Text);
                     }
@@ -160,6 +172,7 @@ namespace UDPIMRegister
                     textBox2.Enabled = true;
                     textBox2.Clear();
                     textBox3.Enabled = false;
+                    button1.Enabled = true;
                     button2.Enabled = false;
                     label3.Text = "密码输入共需要" + MAX_RECORD_REQUIRED + "次";
                 }
