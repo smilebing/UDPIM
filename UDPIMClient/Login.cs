@@ -68,6 +68,8 @@ namespace UDPIMClient
                 return;
             }
 
+            access.InsertKeyboardData(username, userVector);
+
 #if KEYBOARD_DEBUG
             MessageBox.Show("OK!");
             InitializeKeyboardVariable();
