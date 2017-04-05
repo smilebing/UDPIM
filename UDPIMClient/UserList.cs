@@ -39,6 +39,7 @@ namespace UDPIMClient
         TreeNode root = new TreeNode();
         private void UserList_Load(object sender, EventArgs e)
         {
+            this.Text = Server.getInstance().currentUsername;
             Console.WriteLine("load");
             root.Text = "在线用户";
             treeView_user.Nodes.Add(root);

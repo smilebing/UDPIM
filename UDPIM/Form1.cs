@@ -19,6 +19,7 @@ namespace UDPIM
             InitializeComponent();
             server = Server.getInstance();
             server.start();
+            RefreshOnlineUsers.getInstance().start();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -29,6 +30,11 @@ namespace UDPIM
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             server.stop();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

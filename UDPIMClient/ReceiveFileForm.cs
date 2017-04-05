@@ -253,8 +253,8 @@ namespace UDPIMClient
             udpReceiveFile.FileReceiveCancel +=
                 new FileReceiveEventHandler(FileReceiveCancel);
             udpReceiveFile.Start();
-            AppendLog(string.Format(
-                "开始侦听，端口：{0}", udpReceiveFile.Port), false);
+//            AppendLog(string.Format(
+//                "开始侦听，端口：{0}", udpReceiveFile.Port), false);
         }
     }
 }

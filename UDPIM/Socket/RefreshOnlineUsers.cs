@@ -13,8 +13,8 @@ namespace UDPIM.Socket
         //构造单例
         private static RefreshOnlineUsers instance = null;
         //线程睡眠时间
-        private static int REFRESH_ONLINE_USERS_SLEEP_TIME = 1000 * 10;
-        private static int HEART_BEAT_TIME = 60 * 1;
+        private static int REFRESH_ONLINE_USERS_SLEEP_TIME = 1000 * 10; //单位ms
+        private static int HEART_BEAT_TIME = 10 * 1; //单位s
         private Thread refreshThread = null;
         private RefreshOnlineUsers()
         {
