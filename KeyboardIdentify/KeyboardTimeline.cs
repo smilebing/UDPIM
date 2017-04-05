@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace KeyboardIdentify
@@ -64,6 +65,13 @@ namespace KeyboardIdentify
             }
 
             return new Vector(v);
+        }
+
+        public static bool IsAvailableKey(int keyValue)
+        {
+            return !(keyValue >= (int) Keys.A && keyValue <= (int) Keys.Z ||
+                     keyValue >= (int) Keys.D0 && keyValue <= (int) Keys.D9 ||
+                     keyValue >= (int) Keys.NumPad0 && keyValue <= (int)Keys.NumPad9);
         }
     }
 }

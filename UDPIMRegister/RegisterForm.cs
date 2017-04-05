@@ -108,8 +108,7 @@ namespace UDPIMRegister
             }
 
             //过滤除了字母以及数字的按键
-            if (!(e.KeyValue >= (int) Keys.A && e.KeyValue <= (int) Keys.Z ||
-                  e.KeyValue >= (int) Keys.D0 && e.KeyValue <= (int) Keys.D9))
+            if (KeyboardTimeline.IsAvailableKey(e.KeyValue))
                 return;
 
             if ((Keys) e.KeyValue != Keys.Enter)
@@ -125,8 +124,7 @@ namespace UDPIMRegister
             //Console.WriteLine("key up");
 
             //过滤除了字母以及数字的按键
-            if (!(e.KeyValue >= (int) Keys.A && e.KeyValue <= (int) Keys.Z ||
-                  e.KeyValue >= (int) Keys.D0 && e.KeyValue <= (int) Keys.D9))
+            if (KeyboardTimeline.IsAvailableKey(e.KeyValue))
                 return;
 
             timeline.MarkUp(e.KeyValue);
