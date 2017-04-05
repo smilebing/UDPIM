@@ -89,7 +89,10 @@ namespace UDPIMRegister
 
         private void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("key down");
+            if ((Keys) e.KeyValue == Keys.Enter)
+            {
+                button2_Click(this, new EventArgs());
+            }
 
             //若还未开始记录，则返回
             if (!recordStarted)
