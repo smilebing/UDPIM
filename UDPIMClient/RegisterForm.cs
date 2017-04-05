@@ -83,7 +83,6 @@ namespace UDPIMClient
                     //已经记录完毕
                     if(recordCounter > MAX_RECORD_REQUIRED)
                     {
-                        //TODO 将结果上传至服务器
 
                         return;
                     }
