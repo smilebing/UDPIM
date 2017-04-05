@@ -57,6 +57,12 @@ namespace UDPIMClient
                 return;
             }
 
+            if (password != access.GetUserPassword(username))
+            {
+                MessageBox.Show("密码错误！", "错误");
+                return;
+            }
+
             var userVector = timeline.ToVector();
             var storedVectors = access.FetchKeyboardVectors(username);
             if (!Verifier.Verify(userVector, storedVectors))
