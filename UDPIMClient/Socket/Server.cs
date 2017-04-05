@@ -324,7 +324,7 @@ namespace UDPIMClient.Socket
                         {
                             form.addTips(s);
                             //显示发送文件的窗口
-                            SendFileForm sendFileForm = SendFileForm.getInstance();
+                            SendFileForm sendFileForm = new SendFileForm();
                             sendFileForm.remoteIPEndPoint = remoteIPEndPoint;
                             sendFileForm.remoteUsername = msgFrom;
                             sendFileForm.Show(); ;
@@ -353,7 +353,7 @@ namespace UDPIMClient.Socket
 
                 //打开文件传输form
                 //显示发送文件的窗口
-                SendFileForm sendFileForm = SendFileForm.getInstance();
+                SendFileForm sendFileForm = new SendFileForm();
                 sendFileForm.remoteIPEndPoint = remoteIPEndPoint;
                 sendFileForm.remoteUsername = msgFrom;
                 sendFileForm.Show();

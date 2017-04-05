@@ -21,7 +21,6 @@ namespace UDPIMClient
 
         private UdpSendFile udpSendFile;
 
-        private static SendFileForm instance;
 
         public string remoteUsername
         {
@@ -41,20 +40,13 @@ namespace UDPIMClient
         /// <summary>
         /// 私有化构造函数，实现单例
         /// </summary>
-        private SendFileForm()
+        public SendFileForm()
         {
             InitializeComponent();
 
         }
 
-        public static SendFileForm getInstance()
-        {
-            if (instance == null)
-            {
-                instance = new SendFileForm();
-            }
-            return instance;
-        }
+   
 
 
         #endregion
