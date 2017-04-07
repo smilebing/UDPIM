@@ -277,8 +277,8 @@ namespace UDPIMClient
             udpSendFile.FileSendComplete +=
                 new FileSendEventHandler(FileSendComplete);
             udpSendFile.Start();
-            AppendLog(string.Format(
-                "开始侦听，端口：{0}", udpSendFile.Port), false);
+//            AppendLog(string.Format(
+//                "开始侦听，端口：{0}", udpSendFile.Port), false);
 
 
         }

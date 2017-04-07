@@ -10,7 +10,7 @@ namespace Model
     public class ServerIP
     {
 //        public static string serverIP = "192.168.18.54";
-        public static string serverIP = "192.168.1.103";
+        public static string serverIP = "192.168.1.100";
         public static int serverPort = 8800;
 
         public static IPEndPoint getServerIPEndPoint()

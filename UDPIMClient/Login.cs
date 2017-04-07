@@ -57,6 +57,12 @@ namespace UDPIMClient
                 return;
             }
 
+            if (access.SearchUserID(username) < 0)
+            {
+                MessageBox.Show("用户不存在！");
+                return;
+            }
+
             if (password != access.GetUserPassword(username))
             {
                 MessageBox.Show("密码错误！", "错误");
