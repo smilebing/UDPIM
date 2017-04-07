@@ -75,7 +75,7 @@ namespace UDPIMClient
 
             AppendLog(string.Format(
                 "文件 {0} 接收完成，MD5 校验: {1}。",
-                e.ReceiveFileManager.Name, e.ReceiveFileManager.Success), true);
+                e.ReceiveFileManager.Name, e.ReceiveFileManager.Success?"成功":"失败"), true);
         }
 
         private void FileReceiveBuffer(
